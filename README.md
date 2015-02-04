@@ -2,6 +2,8 @@
 
 [![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
 
+![img](http://i.imgur.com/5A4b6hT.png)
+
 Prettifies ndjson from wzrd and similar bundlers. 
 
 Install: 
