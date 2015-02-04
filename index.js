@@ -18,7 +18,7 @@ function write(data) {
     var url = chalk.bold(data.url)
     
     if (data.elapsed) {
-        return [url, chalk.green(data.elapsed), chalk.magenta(data.command||'')].join(' ')
+        return [url, chalk.magenta(data.type), chalk.green(data.elapsed)].join(' ')
     } else {
         return [url, chalk.dim(type)].join(' ')
     }

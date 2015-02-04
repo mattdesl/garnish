@@ -30,14 +30,14 @@ Returns a duplexer that parses input as ndjson, and writes a pretty-printed resu
 
 ## format
 
-PRs welcome for other tools (Webpack? Watchify? Beefy? etc). Currently deals with the following:
+PRs and suggestions welcome for other tools (Webpack? Watchify? Beefy? etc). Currently deals with the following:
 
 ```js
 //simple event
 { type: 'generated', url: '/' }
 
-//timed event with optional command
-{ type: 'foo', url: '/blah.js', command: 'foobar', elapsed: '325ms' }
+//timed event with type
+{ type: 'foo', url: '/blah.js', elapsed: '325ms' }
 ```
 
 ## License
