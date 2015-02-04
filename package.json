@@ -1,0 +1,50 @@
+{
+  "name": "garnish",
+  "version": "1.0.0",
+  "description": "prettifies ndjson from wzrd and similar tools",
+  "main": "index.js",
+  "license": "MIT",
+  "author": {
+    "name": "Matt DesLauriers",
+    "email": "dave.des@gmail.com",
+    "url": "https://github.com/mattdesl"
+  },
+  "bin": {
+    "garnish": "./bin/cmd.js"
+  },
+  "dependencies": {
+    "chalk": "^0.5.1",
+    "duplexer": "^0.1.1",
+    "ndjson": "^1.3.0",
+    "through2": "^0.6.3"
+  },
+  "devDependencies": {
+    "browserify": "^8.1.3",
+    "tape": "^3.5.0",
+    "wzrd": "^1.2.1"
+  },
+  "scripts": {
+    "demo": "wzrd test/demo.js | node ./bin/cmd.js"
+  },
+  "keywords": [
+    "prettify",
+    "pretty",
+    "print",
+    "pretty-print",
+    "ndjson",
+    "bundle",
+    "bundler",
+    "browserify",
+    "wzrd",
+    "beefy",
+    "wizz"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mattdesl/garnish.git"
+  },
+  "homepage": "https://github.com/mattdesl/garnish",
+  "bugs": {
+    "url": "https://github.com/mattdesl/garnish/issues"
+  }
+}
