@@ -14,6 +14,10 @@ module.exports = function garnish() {
 }
 
 function write(data) {
+    if (typeof data === 'string' || !data)
+        return data
+    if (data.message)
+        return chalk.gray(data.message)
     if (!data.type || !data.url)
         return chalk.gray(data)
 
