@@ -4,7 +4,7 @@
 
 ![img](http://i.imgur.com/5A4b6hT.png)
 
-Prettifies ndjson from wzrd and similar bundlers. 
+Prettifies [ndjson](http://ndjson.org/) from wzrd and similar bundlers. 
 
 Install: 
 
@@ -41,6 +41,8 @@ PRs and suggestions welcome for other tools (Webpack? Watchify? Beefy? etc). Cur
 //timed event with type
 { type: 'foo', url: '/blah.js', elapsed: '325ms' }
 ```
+
+If the message has `elapsed`, it will be printed in green next to a magenta `type` and bold `url`. Otherwise `type` will be dimmed and `url` boldened. Other messages are printed greyed out. 
 
 ## License
 
