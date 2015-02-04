@@ -5,7 +5,7 @@ var duplexer = require('duplexer')
 
 module.exports = function garnish() {
     var out = through2()
-    var parse = require('ndjson').parse()
+    var parse = require('ndjson').parse({ strict: false })
         .on('data', function(obj) {
             out.push(write(obj)+" \n")
         })
@@ -14,6 +14,9 @@ module.exports = function garnish() {
 }
 
 function write(data) {
+    if (!data.type || !data.url)
+        return chalk.gray(data)
+
     var type = ['(',data.type,')'].join('')
     var url = chalk.bold(data.url)
     
