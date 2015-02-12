@@ -36,6 +36,8 @@ Options:
     --level, -l  the minimum debug level, default 'info'
 ```
 
+Where `level` can be `debug`, `info`, `warn`, `error`.
+
 ## API
 
 #### `garnish(opt)`
@@ -43,6 +45,7 @@ Options:
 Returns a duplexer that parses input as ndjson, and writes a pretty-printed result. Options:
 
 - `level` the minimum level to listen for, defaults to `"info"`
+
 
 ## format
 

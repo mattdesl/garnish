@@ -45,7 +45,7 @@ module.exports = function garnish(opt) {
 
         var level = data.level || 'info'
         if (!succeed(loggerLevel, level)) {
-            return loggerLevel+' '+level
+            return false
         }
 
         var line = []
