@@ -1,7 +1,7 @@
-var ndjson = require('ndjson')
 var chalk = require('chalk')
 var through2 = require('through2')
 var duplexer = require('duplexer')
+var split = require('split2')
 
 var colors = {
     debug: 'cyan',
@@ -27,26 +27,34 @@ module.exports = function garnish(opt) {
     var loggerLevel = opt.level || 'info'
 
     var out = through2()
-    var parse = require('ndjson')
-        .parse({ strict: false })
+    var parse = split(parseJSON)
         .on('data', onData)
     var dup = duplexer(parse, out)
     return dup
 
+    function parseJSON(data) {
+        try {
+          data = JSON.parse(data)
+        } catch(e) { }
+        return data||''
+    }
+
     function onData(data) {
+        if (!data) return
+
         var str = write(data)
         if (str)
             out.push(str+" \n")
     }
 
     function write(data) {
-        if (typeof data === 'string' || !data)
-            return data
+        if (typeof data === 'string')
+            return chalk.gray(pad(data||''))
 
         var level = data.level || 'info'
-        if (!succeed(loggerLevel, level)) {
-            return false
-        }
+        if (!succeed(loggerLevel, level))
+            return
+        
 
         var line = []
         var name = data.name ? data.name.replace(/\:[-:a-z0-9]{8,}$/g, '') : ''
@@ -81,7 +89,7 @@ function succeed(logLevel, msgLevel) {
     return msgIdx >= levelIdx
 }
 
-function pad(str, n) {
+function pad(str) {
   str = String(str)
   while (str.length < 5) {
     str = ' ' + str
