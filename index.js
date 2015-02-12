@@ -3,30 +3,50 @@ var chalk = require('chalk')
 var through2 = require('through2')
 var duplexer = require('duplexer')
 
-module.exports = function garnish() {
+var levels = [
+    'debug', 'info', 'warn', 'error'
+]
+
+module.exports = function garnish(opt) {
+    opt = opt||{}
+    var level = opt.level || 'info'
+
     var out = through2()
     var parse = require('ndjson').parse({ strict: false })
-        .on('data', function(obj) {
-            out.push(write(obj)+" \n")
-        })
+        .on('data', onData)
     var dup = duplexer(parse, out)
     return dup
+
+    function onData(data) {
+        var str = write(data)
+        if (str)
+            out.push(str+" \n")
+    }
+
+    function write(data) {
+        if (typeof data === 'string' || !data)
+            return data
+        if (!succeed(level, data.level))
+            return false
+        if (data.message)
+            return chalk.gray(data.message)
+        if (!data.type || !data.url)
+            return chalk.gray(data)
+
+        var type = ['(',data.type,')'].join('')
+        var url = chalk.bold(data.url)
+        
+        if (data.elapsed) {
+            return [url, chalk.magenta(data.type), chalk.green(data.elapsed)].join(' ')
+        } else {
+            return [url, chalk.dim(type)].join(' ')
+        }
+    }
 }
 
-function write(data) {
-    if (typeof data === 'string' || !data)
-        return data
-    if (data.message)
-        return chalk.gray(data.message)
-    if (!data.type || !data.url)
-        return chalk.gray(data)
-
-    var type = ['(',data.type,')'].join('')
-    var url = chalk.bold(data.url)
-    
-    if (data.elapsed) {
-        return [url, chalk.magenta(data.type), chalk.green(data.elapsed)].join(' ')
-    } else {
-        return [url, chalk.dim(type)].join(' ')
-    }
+function succeed(loggerLevel, msgLevel) {
+    var lidx = levels.indexOf(loggerLevel)
+    var midx = levels.indexOf(msgLevel)
+    if (midx===-1 || lidx===-1) return true
+    return midx >= lidx
 }
