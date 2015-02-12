@@ -3,16 +3,32 @@ var chalk = require('chalk')
 var through2 = require('through2')
 var duplexer = require('duplexer')
 
-var levels = [
-    'debug', 'info', 'warn', 'error'
+var colors = {
+    debug: 'cyan',
+    info: 'blue',
+    warn: 'yellow',
+    error: 'red'
+}
+
+var poolCount = 0
+var poolIndex = {}
+var pool = [
+    'magenta'
+  , 'cyan'
+  , 'blue'
+  , 'green'
+  , 'yellow'
 ]
+
+var levels = Object.keys(colors)
 
 module.exports = function garnish(opt) {
     opt = opt||{}
-    var level = opt.level || 'info'
+    var loggerLevel = opt.level || 'info'
 
     var out = through2()
-    var parse = require('ndjson').parse({ strict: false })
+    var parse = require('ndjson')
+        .parse({ strict: false })
         .on('data', onData)
     var dup = duplexer(parse, out)
     return dup
@@ -26,27 +42,49 @@ module.exports = function garnish(opt) {
     function write(data) {
         if (typeof data === 'string' || !data)
             return data
-        if (!succeed(level, data.level))
-            return false
-        if (data.message)
-            return chalk.gray(data.message)
-        if (!data.type || !data.url)
-            return chalk.gray(data)
 
-        var type = ['(',data.type,')'].join('')
-        var url = chalk.bold(data.url)
-        
-        if (data.elapsed) {
-            return [url, chalk.magenta(data.type), chalk.green(data.elapsed)].join(' ')
-        } else {
-            return [url, chalk.dim(type)].join(' ')
+        var level = data.level || 'info'
+        if (!succeed(loggerLevel, level)) {
+            return loggerLevel+' '+level
         }
+
+        var line = []
+        var name = data.name ? data.name.replace(/\:[-:a-z0-9]{8,}$/g, '') : ''
+        
+        var nameColor = poolIndex[name] || (
+          poolIndex[name] = pool[poolCount++ % pool.length]
+        )
+
+        var levelColor = colors[level] || 'yellow'
+        var type = ['(',data.type,')'].join('')
+        var url = chalk.bold(data.url||'')
+
+        line.push(chalk[levelColor](pad(level, 5)))
+
+        if (name)
+            line.push(chalk[nameColor](name + ':'))
+        
+        if (data.url && data.elapsed && data.type)
+            line.push([url, chalk.magenta(type), chalk.green(data.elapsed)].join(' '))
+        else if (data.url && data.type)
+            line.push([url, chalk.dim(type)].join(' '))
+        else if (data.message)
+            line.push(chalk.gray(data.message))
+        return line.join(' ')
     }
 }
 
-function succeed(loggerLevel, msgLevel) {
-    var lidx = levels.indexOf(loggerLevel)
-    var midx = levels.indexOf(msgLevel)
-    if (midx===-1 || lidx===-1) return true
-    return midx >= lidx
+function succeed(logLevel, msgLevel) {
+    var levelIdx = levels.indexOf(logLevel)
+    var msgIdx = levels.indexOf(msgLevel)
+    if (msgIdx===-1 || levelIdx===-1) return true
+    return msgIdx >= levelIdx
+}
+
+function pad(str, n) {
+  str = String(str)
+  while (str.length < 5) {
+    str = ' ' + str
+  }
+  return str
 }

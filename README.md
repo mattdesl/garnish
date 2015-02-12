@@ -2,9 +2,9 @@
 
 [![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
 
-![img](http://i.imgur.com/5A4b6hT.png)
+![img](http://i.imgur.com/8OP1YPB.png)
 
-Prettifies [ndjson](http://ndjson.org/) from wzrd and similar bundlers. 
+Prettifies [ndjson](http://ndjson.org/) or [bole](https://github.com/rvagg/bole) logs from [wzrd](https://github.com/maxogden/wzrd/), [wtch](https://github.com/mattdesl/wtch) and other tools. Similar to [bistre](https://github.com/hughsk/bistre).
 
 Install: 
 
@@ -26,13 +26,27 @@ Then `npm start` on your project to see it in action.
 
 [![NPM](https://nodei.co/npm/garnish.png)](https://www.npmjs.com/package/garnish)
 
-#### `garnish()`
+## CLI
 
-Returns a duplexer that parses input as ndjson, and writes a pretty-printed result. 
+```sh
+wzrd index.js | garnish [opts]
+
+Options:
+    
+    --level, -l  the minimum debug level, default 'info'
+```
+
+## API
+
+#### `garnish(opt)`
+
+Returns a duplexer that parses input as ndjson, and writes a pretty-printed result. Options:
+
+- `level` the minimum level to listen for, defaults to `"info"`
 
 ## format
 
-PRs and suggestions welcome for other tools (Webpack? Watchify? Beefy? etc). Currently deals with the following:
+PRs and suggestions welcome for other tools (Webpack? Watchify? Beefy? etc). Currently handles [bole](https://github.com/rvagg/bole) logs with some added flair for the following:
 
 ```js
 //simple event
@@ -42,7 +56,9 @@ PRs and suggestions welcome for other tools (Webpack? Watchify? Beefy? etc). Cur
 { type: 'foo', url: '/blah.js', elapsed: '325ms' }
 ```
 
-If the message has `elapsed`, it will be printed in green next to a magenta `type` and bold `url`. Otherwise `type` will be dimmed and `url` boldened. Other messages are printed greyed out. 
+Messages with `url`, `type` and `elapsed` have a stronger emphasis, messages with just `url` and `type` will be dimmed. 
+
+Other messages are printed gray, with the log name (if available) and level. 
 
 ## License
 
