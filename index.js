@@ -25,7 +25,8 @@ var levels = Object.keys(colors)
 module.exports = function garnish(opt) {
     opt = opt||{}
     var loggerLevel = opt.level || 'info'
-
+    var verbose = opt.verbose
+    
     var out = through2()
     var parse = split(parseJSON)
         .on('data', onData)
@@ -52,7 +53,7 @@ module.exports = function garnish(opt) {
             return chalk.gray(pad(data||''))
 
         var level = data.level || 'info'
-        if (!succeed(loggerLevel, level))
+        if (!verbose && !succeed(loggerLevel, level))
             return
         
 

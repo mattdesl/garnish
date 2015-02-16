@@ -26,3 +26,14 @@ test('should print debug logs', function(t) {
         kill(proc.pid)
     }))
 })
+
+test('should print debug logs', function(t) {
+    t.plan(1)
+    var proc = exec('node '+appPath+' | '+cliPath+' -v --level warn', { cwd: __dirname, env: process.env })
+    proc.stdout.pipe(concat(function (data) {
+        t.equal(data.toString(), 
+            "message \n warn app: msg \ndebug app: msg \n", 
+            'correct messages')
+        kill(proc.pid)
+    }))
+})

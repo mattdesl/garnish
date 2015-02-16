@@ -33,10 +33,13 @@ wzrd index.js | garnish [opts]
 
 Options:
     
-    --level, -l  the minimum debug level, default 'info'
+    --level, -l    the minimum debug level, default 'info'
+    --verbose, -v  print all log levels
 ```
 
 Where `level` can be `debug`, `info`, `warn`, `error`.
+
+If `--verbose` is specified, `--level` will be ignored.
 
 ## API
 
