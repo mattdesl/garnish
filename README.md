@@ -4,7 +4,7 @@
 
 ![img](http://i.imgur.com/8OP1YPB.png)
 
-Prettifies [ndjson](http://ndjson.org/) or [bole](https://github.com/rvagg/bole) logs from [wzrd](https://github.com/maxogden/wzrd/), [wtch](https://github.com/mattdesl/wtch) and other tools. Similar to [bistre](https://github.com/hughsk/bistre).
+Prettifies [ndjson](http://ndjson.org/) or [bole](https://github.com/rvagg/bole) logs from [budo](https://github.com/mattdesl/budo), [wzrd](https://github.com/maxogden/wzrd/), [wtch](https://github.com/mattdesl/wtch) and other tools. Similar to [bistre](https://github.com/hughsk/bistre).
 
 Install: 
 
