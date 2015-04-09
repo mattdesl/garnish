@@ -21,10 +21,8 @@
   },
   "devDependencies": {
     "browserify": "^8.1.3",
-    "concat-stream": "^1.4.7",
-    "npm-execspawn": "^1.0.6",
+    "strip-ansi": "^2.0.1",
     "tape": "^3.5.0",
-    "tree-kill": "0.0.6",
     "wzrd": "^1.2.1"
   },
   "scripts": {

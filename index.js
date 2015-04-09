@@ -37,24 +37,25 @@ module.exports = function garnish(opt) {
         try {
           data = JSON.parse(data)
         } catch(e) { }
-        return data||''
+        if (!data || typeof data !== 'object')
+            data = String(data)
+        return data
     }
 
-    function onData(data) {
-        if (!data) return
-
+    function onData(data) {        
         var str = write(data)
         if (str)
             out.push(str+" \n")
     }
 
     function write(data) {
+        //print null/undefined/string/etc
         if (typeof data === 'string')
-            return chalk.gray(pad(data||''))
+            return chalk.gray(pad(data))
 
         var level = data.level || 'info'
         if (!verbose && !succeed(loggerLevel, level))
-            return
+            return null
         
 
         var line = []
