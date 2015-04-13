@@ -74,12 +74,13 @@ module.exports = function garnish(opt) {
         if (name)
             line.push(chalk[nameColor](name + ':'))
         
-        if (data.url && data.elapsed && data.type)
+        if (data.message)
+            line.push(chalk.gray(data.message))
+        else if (data.url && data.elapsed && data.type)
             line.push([url, chalk.magenta(type), chalk.green(data.elapsed)].join(' '))
         else if (data.url && data.type)
             line.push([url, chalk.dim(type)].join(' '))
-        else if (data.message)
-            line.push(chalk.gray(data.message))
+    
         return line.join(' ')
     }
 }
