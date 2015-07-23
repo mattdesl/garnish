@@ -1,6 +1,6 @@
 {
   "name": "garnish",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "prettifies ndjson from wzrd and similar tools",
   "main": "index.js",
   "license": "MIT",
