@@ -14,9 +14,8 @@ var padLen = Object.keys(colors).reduce(function (prev, a) {
   return Math.max(prev, a.length)
 }, 0)
 
-var poolCount = 0
-var poolIndex = {}
 var pool = [ 'magenta', 'cyan', 'blue', 'green', 'yellow' ]
+var keys = [ 'level', 'message', 'url', 'elapsed', 'type', 'name' ]
 
 var levels = Object.keys(colors)
 
@@ -24,37 +23,30 @@ module.exports = function garnish (opt) {
   opt = opt || {}
   var loggerLevel = opt.level || 'info'
   var verbose = opt.verbose
+  var poolCount = 0
+  var poolIndex = {}
 
   var out = through2()
-  var parse = split(parseJSON)
+  var parse = split()
     .on('data', onData)
   var dup = duplexer(parse, out)
   return dup
 
-  function parseJSON (data) {
-    try {
-      data = JSON.parse(data)
-    } catch(e) {}
-    // null/false/undefined/etc
-    if (typeof data !== 'object' || data == null) {
-      data = String(data)
-    }
-    return data
-  }
-
   function onData (data) {
-    var str = write(data)
-    if (str) {
-      out.push(str + ' \n')
+    // see if we should style it
+    var style = parseData(data)
+    if (style) {
+      data = write(style)
+      // if skipping certain log levels
+      if (!data) {
+        return
+      }
     }
+
+    out.push(data + '\n')
   }
 
   function write (data) {
-    // print null/undefined/string/etc without any styling
-    if (typeof data === 'string') {
-      return data
-    }
-
     var level = data.level || 'info'
     if (!verbose && !succeed(loggerLevel, level)) {
       return null
@@ -63,9 +55,12 @@ module.exports = function garnish (opt) {
     var line = []
     var name = data.name ? data.name.replace(/\:[-:a-z0-9]{8,}$/g, '') : ''
 
-    var nameColor = poolIndex[name] || (
-      poolIndex[name] = pool[poolCount++ % pool.length]
-    )
+    if (!poolIndex[name]) {
+      poolIndex[name] = pool[poolCount % pool.length]
+      poolCount++
+    }
+
+    var nameColor = poolIndex[name]
 
     var levelColor = colors[level] || 'yellow'
     var type = ['(', data.type, ')'].join('')
@@ -86,6 +81,26 @@ module.exports = function garnish (opt) {
     }
 
     return line.join(' ')
+  }
+}
+
+function isStyleObject (data) {
+  // skip false/undefined/etc
+  if (typeof data !== 'object' || !data) {
+    return false
+  }
+  // ensure we have something worth styling
+  return keys.some(function (key) {
+    return data.hasOwnProperty(key)
+  })
+}
+
+function parseData (data) {
+  try {
+    var json = JSON.parse(data)
+    return isStyleObject(json) ? json : null
+  } catch (e) {
+    return null
   }
 }
 

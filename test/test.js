@@ -10,15 +10,17 @@ test('should handle streams', function (t) {
   run(0, '0')
   run(2, '2')
   run(false, 'false')
+
+  // test non stylables
+  run('some string', JSON.stringify('some string'), 'handles strings')
+  run({ foo: 'bar' }, JSON.stringify({ foo: 'bar' }), 'handles strings')
+  run('1', JSON.stringify('1'))
+
   ignored({ name: 'app', level: 'warn' }, 'should ignore level', { level: 'error' })
   ignored({ name: 'app', message: 'foobar' }, 'should ignore default debug')
 
   run({ name: 'app', level: 'debug' }, 'debug app:', 'prints with verbose', { verbose: true })
   run({ name: 'app', level: 'debug' }, 'debug app:', 'prints with debug level', { level: 'debug' })
-
-  // test non JSON
-  run('some string', 'some string', 'handles strings')
-  run('1', '1')
 
   // test valid JSON
   run({ name: 'foo', level: 'info' }, 'info foo:', 'shows app name and level')
@@ -29,7 +31,7 @@ test('should handle streams', function (t) {
   run({ url: '/home', type: 'static' }, 'info /home (static)')
   run({ url: '/home', type: 'static', name: 'app' }, 'info app: /home (static)')
 
-  // test url and type + elapsed
+  // // test url and type + elapsed
   run({ url: '/home', type: 'static', elapsed: 'infinity', name: 'app' }, 'info app: /home (static) infinity')
   t.end()
 
