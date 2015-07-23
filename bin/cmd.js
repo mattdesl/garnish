@@ -7,5 +7,5 @@ argv.verbose = argv.verbose || argv.v
 process.stdin.resume()
 process.stdin.setEncoding('utf8')
 process.stdin
-    .pipe(garnish(argv))
-    .pipe(process.stdout)
+  .pipe(garnish(argv))
+  .pipe(process.stdout)

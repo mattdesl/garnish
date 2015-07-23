@@ -21,12 +21,13 @@
   },
   "devDependencies": {
     "browserify": "^8.1.3",
+    "standard": "^4.5.4",
     "strip-ansi": "^2.0.1",
     "tape": "^3.5.0",
     "wzrd": "^1.2.1"
   },
   "scripts": {
-    "test": "node test/test.js",
+    "test": "standard && node test/test.js",
     "wzrd": "wzrd test/demo.js | ./bin/cmd.js",
     "demo": "node test/app.js | ./bin/cmd.js"
   },
