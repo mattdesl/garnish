@@ -27,7 +27,8 @@
   },
   "scripts": {
     "test": "node test/test.js",
-    "demo": "wzrd test/demo.js | node ./bin/cmd.js"
+    "wzrd": "wzrd test/demo.js | ./bin/cmd.js",
+    "demo": "node test/app.js | ./bin/cmd.js"
   },
   "keywords": [
     "prettify",

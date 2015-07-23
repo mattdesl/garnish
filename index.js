@@ -10,6 +10,10 @@ var colors = {
     error: 'red'
 }
 
+var padLen = Object.keys(colors).reduce(function (prev, a) {
+    return Math.max(prev, a.length)
+}, 0)
+
 var poolCount = 0
 var poolIndex = {}
 var pool = [
@@ -37,7 +41,8 @@ module.exports = function garnish(opt) {
         try {
           data = JSON.parse(data)
         } catch(e) { }
-        if (!data || typeof data !== 'object')
+        // null/false/undefined/etc
+        if (typeof data !== 'object' || data == null)
             data = String(data)
         return data
     }
@@ -49,9 +54,10 @@ module.exports = function garnish(opt) {
     }
 
     function write(data) {
-        //print null/undefined/string/etc
-        if (typeof data === 'string')
-            return pad(data)
+        //print null/undefined/string/etc without any styling
+        if (typeof data === 'string') {
+            return data
+        }
 
         var level = data.level || 'info'
         if (!verbose && !succeed(loggerLevel, level))
@@ -69,7 +75,7 @@ module.exports = function garnish(opt) {
         var type = ['(',data.type,')'].join('')
         var url = chalk.bold(data.url||'')
 
-        line.push(chalk[levelColor](pad(level, 5)))
+        line.push(chalk[levelColor](pad(level, padLen)))
 
         if (name)
             line.push(chalk[nameColor](name + ':'))
@@ -92,9 +98,9 @@ function succeed(logLevel, msgLevel) {
     return msgIdx >= levelIdx
 }
 
-function pad(str) {
+function pad(str, len) {
   str = String(str)
-  while (str.length < 5) {
+  while (str.length < len) {
     str = ' ' + str
   }
   return str
