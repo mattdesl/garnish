@@ -51,7 +51,7 @@ module.exports = function garnish(opt) {
     function write(data) {
         //print null/undefined/string/etc
         if (typeof data === 'string')
-            return chalk.gray(pad(data))
+            return pad(data)
 
         var level = data.level || 'info'
         if (!verbose && !succeed(loggerLevel, level))
