@@ -64,7 +64,7 @@ PRs and suggestions welcome for other tools (Webpack? Watchify? Beefy? etc). Cur
 
 Messages with `url`, `type` and `elapsed` have a stronger emphasis, messages with just `url` and `type` will be dimmed. 
 
-Other messages are printed gray, with the log name (if available) and level. 
+Other messages are printed as usual, with the log name (if available) and level. 
 
 ## License
 
