@@ -73,7 +73,7 @@ module.exports = function garnish (opt) {
     }
 
     if (data.message) {
-      line.push(chalk.gray(data.message))
+      line.push(data.message)
     } else if (data.url && data.elapsed && data.type) {
       line.push([url, chalk.magenta(type), chalk.green(data.elapsed)].join(' '))
     } else if (data.url && data.type) {
