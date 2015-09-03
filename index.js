@@ -15,7 +15,16 @@ var padLen = Object.keys(colors).reduce(function (prev, a) {
 }, 0)
 
 var pool = [ 'magenta', 'cyan', 'blue', 'green', 'yellow' ]
-var keys = [ 'level', 'message', 'url', 'elapsed', 'type', 'name' ]
+var keys = [
+  'level',
+  'name',
+  'message',
+  'url',
+  'statusCode',
+  'contentLength',
+  'elapsed',
+  'type'
+]
 
 var levels = Object.keys(colors)
 
@@ -65,20 +74,17 @@ module.exports = function garnish (opt) {
     var levelColor = colors[level] || 'yellow'
     var type = ['(', data.type, ')'].join('')
     var url = chalk.bold(data.url || '')
+    var statusColor = data.statusCode >= 400 ? 'red' : 'green'
 
+    // create line output
     line.push(chalk[levelColor](pad(level, padLen)))
-
-    if (name) {
-      line.push(chalk[nameColor](name + ':'))
-    }
-
-    if (data.message) {
-      line.push(data.message)
-    } else if (data.url && data.elapsed && data.type) {
-      line.push([url, chalk.magenta(type), chalk.green(data.elapsed)].join(' '))
-    } else if (data.url && data.type) {
-      line.push([url, chalk.dim(type)].join(' '))
-    }
+    if (name) line.push(chalk[nameColor](name + ':'))
+    if (data.message) line.push(data.message)
+    if (data.url) line.push(url)
+    if (data.statusCode) line.push(chalk[statusColor](data.statusCode))
+    if (data.contentLength) line.push(chalk.dim(data.contentLength))
+    if (data.elapsed) line.push(chalk.green(data.elapsed))
+    if (data.type) line.push(chalk.dim(type))
 
     return line.join(' ')
   }

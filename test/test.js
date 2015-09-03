@@ -32,7 +32,17 @@ test('should handle streams', function (t) {
   run({ url: '/home', type: 'static', name: 'app' }, 'info app: /home (static)')
 
   // // test url and type + elapsed
-  run({ url: '/home', type: 'static', elapsed: 'infinity', name: 'app' }, 'info app: /home (static) infinity')
+  run({ url: '/home', type: 'static', elapsed: 'infinity', name: 'app' }, 'info app: /home infinity (static)')
+
+  // test everything
+  run({
+    name: 'http',
+    url: '/home',
+    type: 'http',
+    statusCode: '200',
+    contentLength: '12b',
+    elapsed: '24ms'
+  }, 'info http: /home 200 12b 24ms (http)')
   t.end()
 
   function ignored (input, msg, opt) {
