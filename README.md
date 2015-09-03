@@ -49,11 +49,20 @@ Returns a duplexer that parses input as ndjson, and writes a pretty-printed resu
 
 - `level` the minimum level to listen for, defaults to `"info"`
 
-
 ## format
+PRs and suggestions welcome for other tools (Webpack? Watchify? Beefy? etc).
+Currently handles [bole](https://github.com/rvagg/bole) logs with some added
+flair for the following:
+- __level__ _(required)_: the loglevel (e.g. `debug`, `info`, `error`)
+- __name__: an optional event name. It's recommended to always have a name.
+- __message__: an event message.
+- __url__: an url. Useful for router logging.
+- __statusCode__: an HTTP statusCode. Codes `>=400` are displayed in red.
+- __contentLength__: the response size.
+- __elapsed__: time elapsed since the previous related event.
+- __type__: the type of event logged.
 
-PRs and suggestions welcome for other tools (Webpack? Watchify? Beefy? etc). Currently handles [bole](https://github.com/rvagg/bole) logs with some added flair for the following:
-
+__example__
 ```js
 //simple event
 { type: 'generated', url: '/' }
@@ -61,10 +70,6 @@ PRs and suggestions welcome for other tools (Webpack? Watchify? Beefy? etc). Cur
 //timed event with type
 { type: 'foo', url: '/blah.js', elapsed: '325ms' }
 ```
-
-Messages with `url`, `type` and `elapsed` have a stronger emphasis, messages with just `url` and `type` will be dimmed. 
-
-Other messages are printed as usual, with the log name (if available) and level. 
 
 ## License
 
