@@ -1,6 +1,7 @@
 var chalk = require('chalk')
 var through2 = require('through2')
 var duplexer = require('duplexer')
+var pathMatch = require('pathname-match')
 var split = require('split2')
 
 var colors = {
@@ -73,7 +74,8 @@ module.exports = function garnish (opt) {
 
     var levelColor = colors[level] || 'yellow'
     var type = ['(', data.type, ')'].join('')
-    var url = chalk.bold(data.url || '')
+    var url = data.url ? pathMatch(data.url) : data.url
+    url = chalk.bold(url || '')
     var statusColor = data.statusCode >= 400 ? 'red' : 'green'
 
     // create line output

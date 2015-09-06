@@ -16,6 +16,7 @@
     "chalk": "^0.5.1",
     "duplexer": "^0.1.1",
     "minimist": "^1.1.0",
+    "pathname-match": "^1.1.0",
     "split2": "^0.2.1",
     "through2": "^0.6.3"
   },

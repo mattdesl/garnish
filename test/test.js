@@ -33,6 +33,7 @@ test('should handle streams', function (t) {
 
   // // test url and type + elapsed
   run({ url: '/home', type: 'static', elapsed: 'infinity', name: 'app' }, 'info app: /home infinity (static)')
+  run({ url: '/home?blah=24#foo', type: 'static', elapsed: 'infinity', name: 'app' }, 'info app: /home infinity (static)', 'strips hash and query')
 
   // test everything
   run({

@@ -53,10 +53,10 @@ Returns a duplexer that parses input as ndjson, and writes a pretty-printed resu
 PRs and suggestions welcome for other tools (Webpack? Watchify? Beefy? etc).
 Currently handles [bole](https://github.com/rvagg/bole) logs with some added
 flair for the following:
-- __level__ _(required)_: the loglevel (e.g. `debug`, `info`, `error`)
-- __name__: an optional event name. It's recommended to always have a name.
+- __level__: the loglevel e.g. `debug`, `info`, `error` (default `info`)
+- __name__: an optional event or application name. It's recommended to always have a name.
 - __message__: an event message.
-- __url__: an url. Useful for router logging.
+- __url__: a url (stripped to pathname), useful for router logging.
 - __statusCode__: an HTTP statusCode. Codes `>=400` are displayed in red.
 - __contentLength__: the response size.
 - __elapsed__: time elapsed since the previous related event.
