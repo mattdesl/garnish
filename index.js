@@ -3,6 +3,7 @@ var through2 = require('through2')
 var duplexer = require('duplexer')
 var pathMatch = require('pathname-match')
 var split = require('split2')
+var urlLib = require('url')
 
 var colors = {
   debug: 'cyan',
@@ -74,8 +75,7 @@ module.exports = function garnish (opt) {
 
     var levelColor = colors[level] || 'yellow'
     var type = ['(', data.type, ')'].join('')
-    var url = data.url ? pathMatch(data.url) : data.url
-    url = chalk.bold(url || '')
+    var url = chalk.bold(stripUrl(data.url))
     var statusColor = data.statusCode >= 400 ? 'red' : 'green'
 
     // create line output
@@ -117,6 +117,16 @@ function succeed (logLevel, msgLevel) {
   var msgIdx = levels.indexOf(msgLevel)
   if (msgIdx === -1 || levelIdx === -1) return true
   return msgIdx >= levelIdx
+}
+
+function stripUrl (url) {
+  if (!url) return ''
+  var obj = urlLib.parse(url)
+  obj.pathname = (obj.pathname || '').replace(/\/$/, '')
+  obj.search = ''
+  obj.hash = ''
+  obj.query = ''
+  return urlLib.format(obj)
 }
 
 function pad (str, len) {
