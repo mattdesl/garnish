@@ -1,7 +1,6 @@
 var chalk = require('chalk')
 var through2 = require('through2')
 var duplexer = require('duplexer')
-var pathMatch = require('pathname-match')
 var split = require('split2')
 var urlLib = require('url')
 
