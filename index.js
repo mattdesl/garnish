@@ -126,7 +126,7 @@ function stripUrl (url) {
   obj.search = ''
   obj.hash = ''
   obj.query = ''
-  return urlLib.format(obj)
+  return urlLib.format(obj) || '/'
 }
 
 function pad (str, len) {
