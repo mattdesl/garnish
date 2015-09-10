@@ -37,7 +37,7 @@ module.exports = function garnish (opt) {
     if (!verbose && !levels.valid(loggerLevel, data.level)) {
       return null
     }
-    
+
     return render(data)
   }
 }
