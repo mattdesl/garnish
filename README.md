@@ -78,7 +78,7 @@ Currently garnish styles the following:
 - `contentLength` - the response size.
 - `elapsed` - time elapsed since the previous related event.
 - `type` - the type of event logged.
-- `color` - an optional color mapping for custom styles
+- `colors` - an optional color mapping for custom styles
 
 For example:
 
@@ -90,7 +90,7 @@ For example:
 { type: 'foo', url: '/blah.js', elapsed: '325ms', name: 'http' }
 ```
 
-You can use the `color` field to override any of the default colors with a new [ANSI style](https://github.com/chalk/ansi-styles). 
+You can use the `colors` field to override any of the default colors with a new [ANSI style](https://github.com/chalk/ansi-styles). 
 
 For example, the following will print `elapsed` in yellow if it passes our threshold:
 
@@ -104,7 +104,7 @@ function logTime (msg) {
     name: 'app',
     message: msg,
     elapsed: time + ' ms',
-    color: {
+    colors: {
       elapsed: time > 1000 ? 'yellow' : 'green'
     }
   })
