@@ -2,21 +2,21 @@
 
 [![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
 
-![img](http://i.imgur.com/8OP1YPB.png)
+![screen](http://i.imgur.com/a6lMvDY.png)
 
-Prettifies [ndjson](http://ndjson.org/) or [bole](https://github.com/rvagg/bole) logs from [budo](https://github.com/mattdesl/budo), [wzrd](https://github.com/maxogden/wzrd/), [wtch](https://github.com/mattdesl/wtch) and other tools. Similar to [bistre](https://github.com/hughsk/bistre).
+Prettifies [ndjson](http://ndjson.org/) or [bole](https://github.com/rvagg/bole) logs from [budo](https://github.com/mattdesl/budo), [wzrd](https://github.com/maxogden/wzrd/) and other tools. Similar to [bistre](https://github.com/hughsk/bistre).
 
 Install: 
 
 ```sh
-npm install wzrd garnish --save-dev
+npm install budo garnish --save-dev
 ```
 
 Then in npm scripts:
 
 ```json
   "scripts": {
-    "start": "wzrd index.js | garnish"
+    "start": "budo index.js | garnish"
   }
 ```
 
@@ -24,12 +24,12 @@ Then `npm start` on your project to see it in action.
 
 ## Usage
 
-[![NPM](https://nodei.co/npm/garnish.png)](https://www.npmjs.com/package/garnish)
+### CLI
 
-## CLI
+Pipe a ndjson emitter into `garnish` like so:
 
 ```sh
-wzrd index.js | garnish [opts]
+node app.js | garnish [opts]
 
 Options:
     
@@ -41,34 +41,75 @@ Where `level` can be `debug`, `info`, `warn`, `error`.
 
 If `--verbose` is specified, `--level` will be ignored.
 
-## API
+### API
 
-#### `garnish(opt)`
+#### `garnish([opt])`
 
 Returns a duplexer that parses input as ndjson, and writes a pretty-printed result. Options:
 
-- `level` the minimum level to listen for, defaults to `"info"`
+- `level` (String)
+  - the minimum log level to print (default `'info'`)
+  - the order is as follows: `debug`, `info`, `warn`, `error`
+- `verbose` (Boolean)
+  - if true, `opt.level` is ignored and all messages will be printed (default `false`)
+
 
 ## format
-PRs and suggestions welcome for other tools (Webpack? Watchify? Beefy? etc).
-Currently handles [bole](https://github.com/rvagg/bole) logs with some added
-flair for the following:
-- __level__: the loglevel e.g. `debug`, `info`, `error` (default `info`)
-- __name__: an optional event or application name. It's recommended to always have a name.
-- __message__: an event message.
-- __url__: a url (stripped to pathname), useful for router logging.
-- __statusCode__: an HTTP statusCode. Codes `>=400` are displayed in red.
-- __contentLength__: the response size.
-- __elapsed__: time elapsed since the previous related event.
-- __type__: the type of event logged.
 
-__example__
+Typically, you would use [bole](https://github.com/rvagg/bole) or [ndjson](https://www.npmjs.com/package/ndjson) to write the content to garnish. You can also write ndjson to `stdout` like so:
+
+```js
+console.log({
+  name: 'myApp',
+  level: 'warn',
+  message: 'not found',
+  statusCode: 404,
+  url: '/foo.txt'
+})
+```
+
+Currently garnish styles the following:
+
+- `level` - the log level e.g. `debug`, `info`, `warn`, `error` (default `info`)
+- `name` - an optional event or application name. It's recommended to always have a name.
+- `message` - an event message.
+- `url` - a url (stripped to pathname), useful for router logging.
+- `statusCode` - an HTTP statusCode. Codes `>=400` are displayed in red.
+- `contentLength` - the response size.
+- `elapsed` - time elapsed since the previous related event.
+- `type` - the type of event logged.
+- `colors` - an optional color mapping for custom styles
+
+For example:
+
 ```js
 //simple event
 { type: 'generated', url: '/' }
 
-//timed event with type
-{ type: 'foo', url: '/blah.js', elapsed: '325ms' }
+//timed event with type and name
+{ type: 'foo', url: '/blah.js', elapsed: '325ms', name: 'http' }
+```
+
+You can use the `colors` field to override any of the default colors with a new [ANSI style](https://github.com/chalk/ansi-styles). 
+
+For example, the following will print `elapsed` in yellow if it passes our threshold:
+
+```js
+function logTime (msg) {
+  var now = Date.now()
+  var time = now - lastTime
+  lastTime = now
+    
+  console.log({
+    name: 'app',
+    message: msg,
+    elapsed: time + ' ms',
+    colors: {
+      elapsed: time > 1000 ? 'yellow' : 'green'
+    }
+  })
+}
+  
 ```
 
 ## License
