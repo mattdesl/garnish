@@ -3,8 +3,23 @@
 //    npm run demo -- --verbose
 
 console.log('Start!')
-console.log(JSON.stringify({ name: 'app', url: 'foo/bar', elapsed: '32ms', type: 'bundle' }))
-console.log(JSON.stringify({ name: 'app', url: 'foo/bar', type: 'bundle' }))
+console.log(JSON.stringify({ name: 'app', url: '/foo/bar', elapsed: '32ms', type: 'bundle' }))
+console.log(JSON.stringify({ name: 'app', url: '/foo/bar', type: 'bundle' }))
+console.log(JSON.stringify({
+  name: 'app', url: '/foo/bar', type: 'static',
+  statusCode: 404, contentLength: 1220
+}))
+console.log(JSON.stringify({
+  name: 'app:12345678', url: '/foo/bar', type: 'bundle',
+  elapsed: '325ms', message: 'hello world',
+  colors: {
+    message: 'blue',
+    elapsed: 'yellow',
+    name: 'green',
+    level: 'gray',
+    type: 'blue'
+  }
+}))
 console.log({})
 var obj = new Buffer([])
 console.log(obj)

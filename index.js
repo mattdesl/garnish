@@ -1,44 +1,17 @@
-var chalk = require('chalk')
 var through2 = require('through2')
 var duplexer = require('duplexer')
 var split = require('split2')
-var urlLib = require('url')
-
-var colors = {
-  debug: 'cyan',
-  info: 'blue',
-  warn: 'yellow',
-  error: 'red'
-}
-
-var padLen = Object.keys(colors).reduce(function (prev, a) {
-  return Math.max(prev, a.length)
-}, 0)
-
-var pool = [ 'magenta', 'cyan', 'blue', 'green', 'yellow' ]
-var keys = [
-  'level',
-  'name',
-  'message',
-  'url',
-  'statusCode',
-  'contentLength',
-  'elapsed',
-  'type'
-]
-
-var levels = Object.keys(colors)
+var levels = require('./lib/levels')
+var renderer = require('./lib/renderer')
 
 module.exports = function garnish (opt) {
   opt = opt || {}
   var loggerLevel = opt.level || 'info'
   var verbose = opt.verbose
-  var poolCount = 0
-  var poolIndex = {}
+  var render = renderer.create()
 
   var out = through2()
-  var parse = split()
-    .on('data', onData)
+  var parse = split().on('data', onData)
   var dup = duplexer(parse, out)
   return dup
 
@@ -57,81 +30,23 @@ module.exports = function garnish (opt) {
   }
 
   function write (data) {
-    var level = data.level || 'info'
-    if (!verbose && !succeed(loggerLevel, level)) {
+    // level defaults to 'info'
+    data.level = data.level || 'info'
+
+    // allow user to filter to a specific level
+    if (!verbose && !levels.valid(loggerLevel, data.level)) {
       return null
     }
-
-    var line = []
-    var name = data.name ? data.name.replace(/\:[-:a-z0-9]{8,}$/g, '') : ''
-
-    if (!poolIndex[name]) {
-      poolIndex[name] = pool[poolCount % pool.length]
-      poolCount++
-    }
-
-    var nameColor = poolIndex[name]
-
-    var levelColor = colors[level] || 'yellow'
-    var type = ['(', data.type, ')'].join('')
-    var url = chalk.bold(stripUrl(data.url))
-    var statusColor = data.statusCode >= 400 ? 'red' : 'green'
-
-    // create line output
-    line.push(chalk[levelColor](pad(level, padLen)))
-    if (name) line.push(chalk[nameColor](name + ':'))
-    if (data.message) line.push(data.message)
-    if (data.url) line.push(url)
-    if (data.statusCode) line.push(chalk[statusColor](data.statusCode))
-    if (data.contentLength) line.push(chalk.dim(data.contentLength))
-    if (data.elapsed) line.push(chalk.green(data.elapsed))
-    if (data.type) line.push(chalk.dim(type))
-
-    return line.join(' ')
+    
+    return render(data)
   }
-}
-
-function isStyleObject (data) {
-  // skip false/undefined/etc
-  if (typeof data !== 'object' || !data) {
-    return false
-  }
-  // ensure we have something worth styling
-  return keys.some(function (key) {
-    return data.hasOwnProperty(key)
-  })
 }
 
 function parseData (data) {
   try {
     var json = JSON.parse(data)
-    return isStyleObject(json) ? json : null
+    return renderer.isStyleObject(json) ? json : null
   } catch (e) {
     return null
   }
-}
-
-function succeed (logLevel, msgLevel) {
-  var levelIdx = levels.indexOf(logLevel)
-  var msgIdx = levels.indexOf(msgLevel)
-  if (msgIdx === -1 || levelIdx === -1) return true
-  return msgIdx >= levelIdx
-}
-
-function stripUrl (url) {
-  if (!url) return ''
-  var obj = urlLib.parse(url)
-  obj.pathname = (obj.pathname || '').replace(/\/$/, '')
-  obj.search = ''
-  obj.hash = ''
-  obj.query = ''
-  return urlLib.format(obj) || '/'
-}
-
-function pad (str, len) {
-  str = String(str)
-  while (str.length < len) {
-    str = ' ' + str
-  }
-  return str
 }
