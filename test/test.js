@@ -35,6 +35,7 @@ test('should handle streams', function (t) {
   run({ url: '/home', type: 'static', elapsed: 'infinity', name: 'app' }, 'info app: /home infinity (static)')
   run({ url: '/home?blah=24#foo', type: 'static', elapsed: 'infinity', name: 'app' }, 'info app: /home infinity (static)', 'strips hash and query')
   run({ url: 'http://localhost:9966/home?blah=24#foo', type: 'static', elapsed: 'infinity', name: 'app' }, 'info app: http://localhost:9966/home infinity (static)', 'does not strip host or port')
+  run({ url: 'http://localhost:9966/', type: 'static', elapsed: 'infinity', name: 'app' }, 'info app: http://localhost:9966/ infinity (static)', 'does not strip host or port')
 
   // test everything
   run({
