@@ -6,7 +6,7 @@
 
 Prettifies [ndjson](http://ndjson.org/) or [bole](https://github.com/rvagg/bole) logs from [budo](https://github.com/mattdesl/budo), [wzrd](https://github.com/maxogden/wzrd/) and other tools. Similar to [bistre](https://github.com/hughsk/bistre).
 
-Install: 
+Install:
 
 ```sh
 npm install budo garnish --save-dev
@@ -20,7 +20,7 @@ Then in npm scripts:
   }
 ```
 
-Then `npm start` on your project to see it in action. 
+Then `npm start` on your project to see it in action.
 
 ## Usage
 
@@ -32,14 +32,11 @@ Pipe a ndjson emitter into `garnish` like so:
 node app.js | garnish [opts]
 
 Options:
-    
+
     --level, -l    the minimum debug level, default 'info'
-    --verbose, -v  print all log levels
 ```
 
 Where `level` can be `debug`, `info`, `warn`, `error`.
-
-If `--verbose` is specified, `--level` will be ignored.
 
 ### API
 
@@ -50,9 +47,6 @@ Returns a duplexer that parses input as ndjson, and writes a pretty-printed resu
 - `level` (String)
   - the minimum log level to print (default `'info'`)
   - the order is as follows: `debug`, `info`, `warn`, `error`
-- `verbose` (Boolean)
-  - if true, `opt.level` is ignored and all messages will be printed (default `false`)
-
 
 ## format
 
@@ -90,7 +84,7 @@ For example:
 { type: 'foo', url: '/blah.js', elapsed: '325ms', name: 'http' }
 ```
 
-You can use the `colors` field to override any of the default colors with a new [ANSI style](https://github.com/chalk/ansi-styles). 
+You can use the `colors` field to override any of the default colors with a new [ANSI style](https://github.com/chalk/ansi-styles).
 
 For example, the following will print `elapsed` in yellow if it passes our threshold:
 
@@ -99,7 +93,7 @@ function logTime (msg) {
   var now = Date.now()
   var time = now - lastTime
   lastTime = now
-    
+
   console.log({
     name: 'app',
     message: msg,
@@ -109,7 +103,7 @@ function logTime (msg) {
     }
   })
 }
-  
+
 ```
 
 ## License
