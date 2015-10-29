@@ -17,7 +17,7 @@ test('should handle streams', function (t) {
   run('1', JSON.stringify('1'))
 
   ignored({ name: 'app', level: 'warn' }, 'should ignore level', { level: 'error' })
-  ignored({ name: 'app', message: 'foobar' }, 'should ignore default debug')
+  run({ name: 'app', message: 'foobar', level: 'debug' }, 'debug app: foobar', 'should not ignore default debug')
 
   run({ name: 'app', level: 'debug' }, 'debug app:', 'prints with verbose', { verbose: true })
   run({ name: 'app', level: 'debug' }, 'debug app:', 'prints with debug level', { level: 'debug' })
