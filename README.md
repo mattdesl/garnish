@@ -33,7 +33,7 @@ node app.js | garnish [opts]
 
 Options:
 
-    --level, -l    the minimum debug level, default 'info'
+    --level, -l    the minimum debug level, default 'debug'
 ```
 
 Where `level` can be `debug`, `info`, `warn`, `error`.
@@ -45,7 +45,7 @@ Where `level` can be `debug`, `info`, `warn`, `error`.
 Returns a duplexer that parses input as ndjson, and writes a pretty-printed result. Options:
 
 - `level` (String)
-  - the minimum log level to print (default `'info'`)
+  - the minimum log level to print (default `'debug'`)
   - the order is as follows: `debug`, `info`, `warn`, `error`
 
 ## format
@@ -64,7 +64,7 @@ console.log({
 
 Currently garnish styles the following:
 
-- `level` - the log level e.g. `debug`, `info`, `warn`, `error` (default `info`)
+- `level` - the log level e.g. `debug`, `info`, `warn`, `error` (default `debug`)
 - `name` - an optional event or application name. It's recommended to always have a name.
 - `message` - an event message.
 - `url` - a url (stripped to pathname), useful for router logging.

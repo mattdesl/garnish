@@ -9,7 +9,7 @@ module.exports = garnish
 function garnish (opt) {
   opt = opt || {}
 
-  var loggerLevel = opt.level || 'info'
+  var loggerLevel = opt.level || 'debug'
   var render = renderer.create()
 
   return split(parse)
