@@ -9,8 +9,7 @@ module.exports = garnish
 function garnish (opt) {
   opt = opt || {}
 
-  var loggerLevel = opt.level || 'info'
-  var verbose = opt.verbose
+  var loggerLevel = opt.level || 'debug'
   var render = renderer.create()
 
   return split(parse)
@@ -24,7 +23,7 @@ function garnish (opt) {
       obj.level = obj.level || 'info'
 
       // allow user to filter to a specific level
-      if (!verbose && !levels.valid(loggerLevel, obj.level)) return
+      if (!levels.valid(loggerLevel, obj.level)) return
 
       return render(obj) + eol
     } catch (e) {
