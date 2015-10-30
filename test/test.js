@@ -45,7 +45,7 @@ test('should handle streams', function (t) {
     statusCode: '200',
     contentLength: '12b',
     elapsed: '24ms'
-  }, 'info http: /home 200 12b 24ms (http)')
+  }, 'info http: /home 200 24ms 12b (http)')
   t.end()
 
   function ignored (input, msg, opt) {

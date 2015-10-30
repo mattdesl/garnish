@@ -15,6 +15,8 @@
   "dependencies": {
     "chalk": "^0.5.1",
     "minimist": "^1.1.0",
+    "pretty-bytes": "^2.0.1",
+    "pretty-ms": "^2.1.0",
     "split2": "^0.2.1",
     "stdout-stream": "^1.4.0",
     "through2": "^0.6.3",
