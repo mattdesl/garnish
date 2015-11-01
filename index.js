@@ -18,6 +18,8 @@ function garnish (opt) {
     try {
       var obj = JSON.parse(line)
 
+      if (opt.bunyan) toBunyan(obj)
+
       // check if we need to style it
       if (!renderer.isStyleObject(obj)) return line + eol
       obj.level = obj.level || 'info'
@@ -29,5 +31,21 @@ function garnish (opt) {
     } catch (e) {
       return line + eol
     }
+  }
+}
+
+// mutate a bole log to bunyan log
+// obj -> null
+function toBunyan (obj) {
+  if (obj.msg && !obj.message) {
+    obj.message = obj.msg
+    delete obj.msg
+  }
+
+  if (typeof obj.level === 'number') {
+    if (obj.level === 20) obj.level = 'debug'
+    if (obj.level === 30) obj.level = 'info'
+    if (obj.level === 40) obj.level = 'warn'
+    if (obj.level === 50) obj.level = 'error'
   }
 }

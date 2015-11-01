@@ -34,6 +34,7 @@ node app.js | garnish [opts]
 Options:
 
     --level, -l    the minimum debug level, default 'debug'
+    --bunyan, -b   parse bunyan logs
 ```
 
 Where `level` can be `debug`, `info`, `warn`, `error`.
