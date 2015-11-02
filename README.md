@@ -4,23 +4,25 @@
 
 ![screen](http://i.imgur.com/a6lMvDY.png)
 
-Prettifies [ndjson](http://ndjson.org/) or [bole](https://github.com/rvagg/bole) logs from [budo](https://github.com/mattdesl/budo), [wzrd](https://github.com/maxogden/wzrd/) and other tools. Similar to [bistre](https://github.com/hughsk/bistre).
+Prettifies [ndjson](http://ndjson.org/) or [bole](https://github.com/rvagg/bole) logs from [wzrd](https://github.com/maxogden/wzrd/) and other tools. Similar to [bistre](https://github.com/hughsk/bistre).
+
+[budo](https://github.com/mattdesl/budo) uses this under the hood for pretty-printing its logs.
 
 Install:
 
 ```sh
-npm install budo garnish --save-dev
+npm install wzrd garnish --save-dev
 ```
 
 Then in npm scripts:
 
 ```json
   "scripts": {
-    "start": "budo index.js | garnish"
+    "start": "wzrd index.js | garnish"
   }
 ```
 
-Then `npm start` on your project to see it in action.
+Then `npm start` on your project to see it in action. 
 
 ## Usage
 
