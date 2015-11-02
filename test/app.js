@@ -4,6 +4,8 @@
 
 console.log('Start!')
 console.log(JSON.stringify({ name: 'app', url: '/foo/bar', elapsed: '32ms', type: 'bundle' }))
+console.log(JSON.stringify({ name: 'app', url: '/foo/time', elapsed: '32' }))
+console.log(JSON.stringify({ name: 'app', url: '/foo/time', elapsed: 32, contentLength: 16 }))
 console.log(JSON.stringify({ name: 'app', url: '/foo/bar', type: 'bundle' }))
 console.log(JSON.stringify({
   name: 'app', url: '/foo/bar', type: 'static',
