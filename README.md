@@ -48,6 +48,8 @@ Returns a duplexer that parses input as ndjson, and writes a pretty-printed resu
 - `level` (String)
   - the minimum log level to print (default `'debug'`)
   - the order is as follows: `debug`, `info`, `warn`, `error`
+- `bunyan` (Boolean)
+  - whether to accept [bunyan](https://github.com/trentm/node-bunyan) style logs, default `false`
 
 ## format
 
