@@ -20,6 +20,12 @@ console.log(JSON.stringify({
     type: 'blue'
   }
 }))
+
+console.log(JSON.stringify({
+  name: 'my-app',
+  message: { pid: 12354, port: 1336, env: 'development' }
+}))
+
 console.log({})
 var obj = new Buffer([])
 console.log(obj)
