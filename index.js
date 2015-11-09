@@ -10,7 +10,7 @@ function garnish (opt) {
   opt = opt || {}
 
   var loggerLevel = opt.level || 'debug'
-  var render = renderer.create()
+  var render = renderer.create(opt.name)
 
   return split(parse)
 

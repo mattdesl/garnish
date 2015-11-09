@@ -14,7 +14,13 @@
   },
   "dependencies": {
     "chalk": "^0.5.1",
+    "columnify": "^1.5.2",
     "minimist": "^1.1.0",
+    "pad-left": "^2.0.0",
+    "pad-right": "^0.2.2",
+    "pretty-bytes": "^2.0.1",
+    "pretty-ms": "^2.1.0",
+    "right-now": "^1.0.0",
     "split2": "^0.2.1",
     "stdout-stream": "^1.4.0",
     "through2": "^0.6.3",
@@ -30,7 +36,8 @@
   "scripts": {
     "test": "standard && node test/test.js",
     "wzrd": "wzrd test/demo.js | ./bin/cmd.js",
-    "demo": "node test/app.js | ./bin/cmd.js"
+    "demo": "node test/app.js | ./bin/cmd.js",
+    "start": "node test/server.js"
   },
   "keywords": [
     "prettify",
