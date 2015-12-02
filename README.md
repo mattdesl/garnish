@@ -2,27 +2,17 @@
 
 [![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
 
-![screen](http://i.imgur.com/a6lMvDY.png)
+Prettifies [ndjson](http://ndjson.org/) or [bole](https://github.com/rvagg/bole) logs from [budo](https://github.com/mattdesl/budo), [wzrd](https://github.com/maxogden/wzrd/) and other tools. 
 
-Prettifies [ndjson](http://ndjson.org/) or [bole](https://github.com/rvagg/bole) logs from [wzrd](https://github.com/maxogden/wzrd/) and other tools. Similar to [bistre](https://github.com/hughsk/bistre).
+Example with budo:
 
-[budo](https://github.com/mattdesl/budo) uses this under the hood for pretty-printing its logs.
+<img src="http://i.imgur.com/Pvus8vy.png" width="75%" />
 
-Install:
+## Install
 
 ```sh
-npm install wzrd garnish --save-dev
+npm install garnish [-g|--save-dev]
 ```
-
-Then in npm scripts:
-
-```json
-  "scripts": {
-    "start": "wzrd index.js | garnish"
-  }
-```
-
-Then `npm start` on your project to see it in action. 
 
 ## Usage
 
@@ -37,6 +27,7 @@ Options:
 
     --level, -l    the minimum debug level, default 'debug'
     --bunyan, -b   parse bunyan logs
+    --name, -n     the default app name
 ```
 
 Where `level` can be `debug`, `info`, `warn`, `error`.
@@ -52,42 +43,54 @@ Returns a duplexer that parses input as ndjson, and writes a pretty-printed resu
   - the order is as follows: `debug`, `info`, `warn`, `error`
 - `bunyan` (Boolean)
   - whether to accept [bunyan](https://github.com/trentm/node-bunyan) style logs, default `false`
+- `name` (String)
+  - the default name for your logger; a message's `name` field will not be printed when it matches this default name, to reduce redundant/obvious information in the logs.
 
 ## format
 
 Typically, you would use [bole](https://github.com/rvagg/bole) or [ndjson](https://www.npmjs.com/package/ndjson) to write the content to garnish. You can also write ndjson to `stdout` like so:
 
 ```js
+// a log message
 console.log({
   name: 'myApp',
   level: 'warn',
-  message: 'not found',
-  statusCode: 404,
-  url: '/foo.txt'
+  message: 'not found'
+})
+
+// a typical server message
+console.log({
+  name: 'myApp',
+  type: 'generated',
+  level: 'info',
+  url: '/foo.png',
+  statusCode: 200,
+  contentLength: 12800, // in bytes
+  elapsed: 120 // in milliseconds
 })
 ```
 
+
 Currently garnish styles the following:
 
-- `level` - the log level e.g. `debug`, `info`, `warn`, `error` (default `debug`)
-- `name` - an optional event or application name. It's recommended to always have a name.
-- `message` - an event message.
-- `url` - a url (stripped to pathname), useful for router logging.
-- `statusCode` - an HTTP statusCode. Codes `>=400` are displayed in red.
-- `contentLength` - the response size.
-- `elapsed` - time elapsed since the previous related event.
-- `type` - the type of event logged.
-- `colors` - an optional color mapping for custom styles
-
-For example:
-
-```js
-//simple event
-{ type: 'generated', url: '/' }
-
-//timed event with type and name
-{ type: 'foo', url: '/blah.js', elapsed: '325ms', name: 'http' }
-```
+- `level`
+  - the log level e.g. `debug`, `info`, `warn`, `error` (default `debug`) - only shown if `message` is present
+- `name`
+  - an optional event or application name. It's recommended to always have a name.
+- `message`
+  - an event message.
+- `url`
+  - a url (stripped to pathname), useful for router logging.
+- `statusCode`
+  - an HTTP statusCode. Codes `>=400` are displayed in red.
+- `contentLength`
+  - the response size; if a `number`, bytes are assumed
+- `elapsed`
+  - time elapsed since the previous related event; if a `number`, milliseconds are assumed
+- `type`
+  - the type of event logged
+- `colors`
+  - an optional color mapping for custom styles
 
 You can use the `colors` field to override any of the default colors with a new [ANSI style](https://github.com/chalk/ansi-styles).
 
@@ -108,8 +111,11 @@ function logTime (msg) {
     }
   })
 }
-
 ```
+
+## See Also
+
+- [bistre](https://github.com/hughsk/bistre)
 
 ## License
 
