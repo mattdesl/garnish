@@ -17,35 +17,41 @@ test('should handle streams', function (t) {
   run('1', JSON.stringify('1'))
 
   ignored({ name: 'app', level: 'warn' }, 'should ignore level', { level: 'error' })
-  run({ name: 'app', message: 'foobar', level: 'debug' }, 'debug app: foobar', 'should not ignore default debug')
-
-  run({ name: 'app', level: 'debug' }, 'debug app:', 'prints with verbose', { verbose: true })
-  run({ name: 'app', level: 'debug' }, 'debug app:', 'prints with debug level', { level: 'debug' })
+  run({ name: 'app', message: 'foobar', level: 'debug' }, '[0000] debug foobar (app)', 'should not ignore default debug')
+  run({ name: 'app', level: 'debug' }, '[0000] (app)', 'prints with debug level')
 
   // test valid JSON
-  run({ name: 'foo', level: 'info' }, 'info foo:', 'shows app name and level')
-  run({ name: 'foo' }, 'info foo:', 'defaults to level info')
-  run({ message: 'bar', name: 'foo' }, 'info foo: bar', 'defaults to level info')
+  // run({ name: 'foo', level: 'info' }, '[0000] ', 'shows app name and level')
+  // run({ name: 'foo' }, 'info foo:', 'defaults to level info')
+  // run({ message: 'bar', name: 'foo' }, 'info foo: bar', 'defaults to level info')
 
   // test url and type
-  run({ url: '/home', type: 'static' }, 'info /home (static)')
-  run({ url: '/home', type: 'static', name: 'app' }, 'info app: /home (static)')
+  run({ url: '/home', type: 'static' }, '[0000] /home')
+  run({ url: '/home', type: 'static', name: 'app' }, '[0000] /home (app)')
 
   // // test url and type + elapsed
-  run({ url: '/home', type: 'static', elapsed: 'infinity', name: 'app' }, 'info app: /home infinity (static)')
-  run({ url: '/home?blah=24#foo', type: 'static', elapsed: 'infinity', name: 'app' }, 'info app: /home infinity (static)', 'strips hash and query')
-  run({ url: 'http://localhost:9966/home?blah=24#foo', type: 'static', elapsed: 'infinity', name: 'app' }, 'info app: http://localhost:9966/home infinity (static)', 'does not strip host or port')
-  run({ url: 'http://localhost:9966/', type: 'static', elapsed: 'infinity', name: 'app' }, 'info app: http://localhost:9966/ infinity (static)', 'does not strip host or port')
+  run({ url: '/home', type: 'static', elapsed: 'infinity', name: 'app' }, '[0000] infinity /home (app)')
+  run({ url: '/home?blah=24#foo', type: 'static', elapsed: 'infinity', name: 'app' }, '[0000] infinity /home (app)', 'strips hash and query')
+  run({ url: 'http://localhost:9966/home?blah=24#foo', type: 'static', elapsed: 'infinity', name: 'app' }, '[0000] infinity http://localhost:9966/home (app)', 'does not strip host or port')
+  run({ url: 'http://localhost:9966/', type: 'static', elapsed: 'infinity', name: 'app' }, '[0000] infinity http://localhost:9966/ (app)', 'does not strip host or port')
+
+  // level only appears on message
+  // also, default name is hidden
+  run({
+    name: 'myApp',
+    message: 'hello world',
+    level: 'info'
+  }, '[0000] info  hello world', 'test level + message', { name: 'myApp' })
 
   // test everything
   run({
-    name: 'http',
+    name: 'myApp',
     url: '/home',
-    type: 'http',
+    type: 'generated',
     statusCode: '200',
     contentLength: '12b',
     elapsed: '24ms'
-  }, 'info http: /home 200 12b 24ms (http)')
+  }, '[0000] 24ms         12B 200 /home (generated)', 'test all fields', { name: 'myApp' })
   t.end()
 
   function ignored (input, msg, opt) {

@@ -15,7 +15,7 @@ log({ level: 'warn', method: 'DELETE', statusCode: 200, elapsed: 13298, url: '/b
 stack.push(JSON.stringify({ foo: 'bar' }))
 log({ method: 'POST', statusCode: 200, elapsed: 14, url: '/static.js', contentLength: 14020 })
 log({ elapsed: 4000, contentLength: 20523, url: '/static/bundle.js', type: 'bundle' })
-log({ elapsed: 4000, message: 'foo bar some message', level: 'warn', contentLength: 20523, url: '/static/bundle.js', type: 'bundle' })
+log({ elapsed: 4000, statusCode: 300, message: 'foo bar some message', level: 'warn', contentLength: 20523, url: '/static/bundle.js', type: 'bundle' })
 
 print()
 
@@ -29,7 +29,7 @@ function log (obj) {
 function print () {
   var pretty = garnish({ name: 'budo' })
   pretty.pipe(process.stdout)
-  
+
   var timer = setInterval(function () {
     if (stack.length > 0) {
       pretty.write(stack.shift() + '\n')
