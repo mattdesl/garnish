@@ -4,7 +4,7 @@
 
 Prettifies [ndjson](http://ndjson.org/) or [bole](https://github.com/rvagg/bole) logs from [budo](https://github.com/mattdesl/budo), [wzrd](https://github.com/maxogden/wzrd/) and other tools. 
 
-Example with budo:
+Example with [budo](https://github.com/mattdesl/budo), which uses this under the hood.
 
 <img src="http://i.imgur.com/Pvus8vy.png" width="75%" />
 
