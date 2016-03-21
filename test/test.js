@@ -17,8 +17,12 @@ test('should handle streams', function (t) {
   run('1', JSON.stringify('1'))
 
   ignored({ name: 'app', level: 'warn' }, 'should ignore level', { level: 'error' })
-  run({ name: 'app', message: 'foobar', level: 'debug' }, '[0000] debug foobar (app)', 'should not ignore default debug')
-  run({ name: 'app', level: 'debug' }, '[0000] (app)', 'prints with debug level')
+
+  const expected = '[0000] debug foobar (app)'
+  run({ name: 'app', message: 'foobar', level: 'debug' }, expected, 'should not ignore default debug')
+
+  const expected0 = '[0000] (app)'
+  run({ name: 'app', level: 'debug' }, expected0, 'prints with debug level')
 
   // test valid JSON
   // run({ name: 'foo', level: 'info' }, '[0000] ', 'shows app name and level')
@@ -26,14 +30,21 @@ test('should handle streams', function (t) {
   // run({ message: 'bar', name: 'foo' }, 'info foo: bar', 'defaults to level info')
 
   // test url and type
-  run({ url: '/home', type: 'static' }, '[0000] /home')
-  run({ url: '/home', type: 'static', name: 'app' }, '[0000] /home (app)')
+  run({ url: '/home', type: 'static' }, '[0000] /home (static)')
+  run({ url: '/home', type: 'static', name: 'app' }, '[0000] /home (static) (app)')
 
   // // test url and type + elapsed
-  run({ url: '/home', type: 'static', elapsed: 'infinity', name: 'app' }, '[0000] infinity /home (app)')
-  run({ url: '/home?blah=24#foo', type: 'static', elapsed: 'infinity', name: 'app' }, '[0000] infinity /home (app)', 'strips hash and query')
-  run({ url: 'http://localhost:9966/home?blah=24#foo', type: 'static', elapsed: 'infinity', name: 'app' }, '[0000] infinity http://localhost:9966/home (app)', 'does not strip host or port')
-  run({ url: 'http://localhost:9966/', type: 'static', elapsed: 'infinity', name: 'app' }, '[0000] infinity http://localhost:9966/ (app)', 'does not strip host or port')
+  const expected1 = '[0000] infinity /home (static) (app)'
+  run({ url: '/home', type: 'static', elapsed: 'infinity', name: 'app' }, expected1)
+
+  const expected2 = '[0000] infinity /home (static) (app)'
+  run({ url: '/home?blah=24#foo', type: 'static', elapsed: 'infinity', name: 'app' }, expected2, 'strips hash and query')
+
+  const expected3 = '[0000] infinity http://localhost:9966/home (static) (app)'
+  run({ url: 'http://localhost:9966/home?blah=24#foo', type: 'static', elapsed: 'infinity', name: 'app' }, expected3, 'does not strip host or port')
+
+  const expected4 = '[0000] infinity http://localhost:9966/ (static) (app)'
+  run({ url: 'http://localhost:9966/', type: 'static', elapsed: 'infinity', name: 'app' }, expected4, 'does not strip host or port')
 
   // level only appears on message
   // also, default name is hidden
