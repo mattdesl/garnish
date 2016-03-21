@@ -26,7 +26,6 @@ node app.js | garnish [opts]
 Options:
 
     --level, -l    the minimum debug level, default 'debug'
-    --bunyan, -b   parse bunyan logs
     --name, -n     the default app name
 ```
 
@@ -41,8 +40,6 @@ Returns a duplexer that parses input as ndjson, and writes a pretty-printed resu
 - `level` (String)
   - the minimum log level to print (default `'debug'`)
   - the order is as follows: `debug`, `info`, `warn`, `error`
-- `bunyan` (Boolean)
-  - whether to accept [bunyan](https://github.com/trentm/node-bunyan) style logs, default `false`
 - `name` (String)
   - the default name for your logger; a message's `name` field will not be printed when it matches this default name, to reduce redundant/obvious information in the logs.
 
