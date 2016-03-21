@@ -19,7 +19,7 @@ function garnish (opt) {
       var obj = JSON.parse(line)
 
       if (obj.name === 'http' && obj.message === 'request') return
-      if (opt.bunyan) toBunyan(obj)
+      if (typeof obj.level === 'number') toBunyan(obj)
 
       // check if we need to style it
       if (!renderer.isStyleObject(obj)) return line + eol
