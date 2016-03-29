@@ -28,6 +28,9 @@ function garnish (opt) {
       // allow user to filter to a specific level
       if (!levels.valid(loggerLevel, obj.level)) return
 
+      // errors should be formatted differently
+      if (typeof obj.err === 'object') return renderer.renderError(obj) + eol
+
       return render(obj) + eol
     } catch (e) {
       return line + eol
