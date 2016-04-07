@@ -31,6 +31,10 @@ function garnish (opt) {
       // errors should be formatted differently
       if (typeof obj.err === 'object') return renderer.renderError(obj) + eol
 
+      if (typeof obj.message === 'object') {
+        return renderer.renderObject(obj) + eol
+      }
+
       return render(obj) + eol
     } catch (e) {
       return line + eol
