@@ -1,13 +1,11 @@
 var split = require('split2')
 var eol = require('os').EOL
 
-var renderer = require('./lib/renderer')
+var renderer = require('./render')
 
 module.exports = garnish
 
-function garnish (opt) {
-  opt = opt || {}
-
+function garnish () {
   return split(parse)
 
   function parse (line) {
