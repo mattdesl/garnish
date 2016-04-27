@@ -17,28 +17,29 @@ function garnish (opt) {
   function parse (line) {
     try {
       var obj = JSON.parse(line)
-
-      if (obj.name === 'http' && obj.message === 'request') return
-      if (typeof obj.level === 'number') toBunyan(obj)
-
-      // check if we need to style it
-      if (!renderer.isStyleObject(obj)) return line + eol
-      obj.level = obj.level || 'info'
-
-      // allow user to filter to a specific level
-      if (!levels.valid(loggerLevel, obj.level)) return
-
-      // errors should be formatted differently
-      if (typeof obj.err === 'object') return renderer.renderError(obj) + eol
-
-      if (typeof obj.message === 'object') {
-        return renderer.renderObject(obj) + eol
-      }
-
-      return render(obj) + eol
     } catch (e) {
       return line + eol
     }
+
+    if (!obj) return line + eol
+    if (obj.name === 'http' && obj.message === 'request') return
+    if (typeof obj.level === 'number') toBunyan(obj)
+
+    // check if we need to style it
+    if (!renderer.isStyleObject(obj)) return line + eol
+    obj.level = obj.level || 'info'
+
+    // allow user to filter to a specific level
+    if (!levels.valid(loggerLevel, obj.level)) return
+
+    // errors should be formatted differently
+    if (typeof obj.err === 'object') return renderer.renderError(obj) + eol
+
+    if (typeof obj.message === 'object') {
+      return renderer.renderObject(obj) + eol
+    }
+
+    return render(obj) + eol
   }
 }
 
