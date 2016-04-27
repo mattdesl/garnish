@@ -1,96 +1,120 @@
 var test = require('tape')
 
-var garnish = require('../')
 var through = require('through2')
 var strip = require('strip-ansi')
+var xtend = require('xtend')
+var garnish = require('../')
 
 // does not test colors, just ensures messages are not lost
 test('should handle streams', function (t) {
-  run(null, 'null')
-  run(0, '0')
-  run(2, '2')
-  run(false, 'false')
+  t.plan(4)
+  run(t, null, 'null')
+  run(t, 0, '0')
+  run(t, 2, '2')
+  run(t, false, 'false')
+})
 
-  // test non stylables
-  run('some string', JSON.stringify('some string'), 'handles strings')
-  run({ foo: 'bar' }, JSON.stringify({ foo: 'bar' }), 'handles strings')
-  run('1', JSON.stringify('1'))
+// test non stylables
+test('should handle non stylables', function (t) {
+  t.plan(6)
+  run(t, 'some string', JSON.stringify('some string'), 'handles strings')
+  run(t, { foo: 'bar' }, JSON.stringify({ foo: 'bar' }), 'handles strings')
+  run(t, '1', JSON.stringify('1'))
 
-  ignored({ name: 'app', level: 'warn' }, 'should ignore level', { level: 'error' })
+  t.test('should handle ignore levels', function (t) {
+    t.plan(1)
+    var input = { name: 'app', level: 'warn' }
+    var msg = 'should ignore level'
+    var opt = { level: 'error' }
+    ignored(t, input, msg, opt)
+  })
 
-  const expected = '[0000] debug foobar (app)'
-  run({ name: 'app', message: 'foobar', level: 'debug' }, expected, 'should not ignore default debug')
+  var input1 = { name: 'app', message: 'foobar', level: 'debug' }
+  var expected1 = '[0000] debug foobar (app)'
+  run(t, input1, expected1, 'should not ignore default debug')
 
-  const expected0 = '[0000] (app)'
-  run({ name: 'app', level: 'debug' }, expected0, 'prints with debug level')
+  var input0 = { name: 'app', level: 'debug' }
+  var expected0 = '[0000] (app)'
+  run(t, input0, expected0, 'prints with debug level')
+})
 
-  // test valid JSON
-  // run({ name: 'foo', level: 'info' }, '[0000] ', 'shows app name and level')
-  // run({ name: 'foo' }, 'info foo:', 'defaults to level info')
-  // run({ message: 'bar', name: 'foo' }, 'info foo: bar', 'defaults to level info')
+test('test url and type', function (t) {
+  t.plan(2)
+  var input0 = { url: '/home', type: 'static' }
+  run(t, input0, '[0000] /home (static)')
 
-  // test url and type
-  run({ url: '/home', type: 'static' }, '[0000] /home (static)')
-  run({ url: '/home', type: 'static', name: 'app' }, '[0000] /home (static) (app)')
+  var input1 = { url: '/home', type: 'static', name: 'app' }
+  run(t, input1, '[0000] /home (static) (app)')
+})
 
-  // // test url and type + elapsed
-  const expected1 = '[0000] infinity /home (static) (app)'
-  run({ url: '/home', type: 'static', elapsed: 'infinity', name: 'app' }, expected1)
+test('test url and type + elapsed', function (t) {
+  t.plan(4)
+  var base = { type: 'static', elapsed: 'infinity', name: 'app' }
 
-  const expected2 = '[0000] infinity /home (static) (app)'
-  run({ url: '/home?blah=24#foo', type: 'static', elapsed: 'infinity', name: 'app' }, expected2, 'strips hash and query')
+  var input1 = xtend(base, { url: '/home' })
+  var expected1 = '[0000] infinity /home (static) (app)'
+  run(t, input1, expected1)
 
-  const expected3 = '[0000] infinity http://localhost:9966/home (static) (app)'
-  run({ url: 'http://localhost:9966/home?blah=24#foo', type: 'static', elapsed: 'infinity', name: 'app' }, expected3, 'does not strip host or port')
+  var input2 = xtend(base, { url: '/home?blah=24#foo' })
+  var expected2 = '[0000] infinity /home (static) (app)'
+  run(t, input2, expected2, 'strips hash and query')
 
-  const expected4 = '[0000] infinity http://localhost:9966/ (static) (app)'
-  run({ url: 'http://localhost:9966/', type: 'static', elapsed: 'infinity', name: 'app' }, expected4, 'does not strip host or port')
+  var input3 = xtend(base, { url: 'http://localhost:9966/home?blah=24#foo' })
+  var expected3 = '[0000] infinity http://localhost:9966/home (static) (app)'
+  run(t, input3, expected3, 'does not strip host or port')
 
-  // level only appears on message
-  // also, default name is hidden
-  run({
-    name: 'myApp',
-    message: 'hello world',
-    level: 'info'
-  }, '[0000] info  hello world', 'test level + message', { name: 'myApp' })
+  var input4 = xtend(base, { url: 'http://localhost:9966/' })
+  var expected4 = '[0000] infinity http://localhost:9966/ (static) (app)'
+  run(t, input4, expected4, 'does not strip host or port')
+})
+
+test('levels appear on msg and default name is hidden', function (t) {
+  t.plan(2)
+
+  var input0 = { name: 'myApp', message: 'hello world', level: 'info' }
+  var expected0 = '[0000] info  hello world'
+  var opts0 = { name: 'myApp' }
+  run(t, input0, expected0, 'test level + message', opts0)
 
   // test everything
-  run({
+  var input1 = {
     name: 'myApp',
     url: '/home',
     type: 'generated',
     statusCode: '200',
     contentLength: '12b',
     elapsed: '24ms'
-  }, '[0000] 24ms         12B 200 /home (generated)', 'test all fields', { name: 'myApp' })
-  t.end()
-
-  function ignored (input, msg, opt) {
-    var val = true
-    var stream = garnish(opt)
-    var stdin = through()
-    stdin
-      .pipe(stream)
-      .pipe(through(function (buf) {
-        var len = strip(buf.toString()).trim().length
-        if (len > 0) {
-          val = false
-        }
-      }))
-    stdin.write(JSON.stringify(input))
-    stdin.end()
-    t.ok(val, msg || 'ignored')
   }
-
-  function run (input, expected, msg, opt) {
-    var stream = garnish(opt)
-    var stdin = through()
-    stdin
-      .pipe(stream)
-      .pipe(through(function (body) {
-        t.deepEqual(strip(body.toString()).trim(), expected, msg)
-      }))
-    stdin.write(JSON.stringify(input))
-    stdin.end()
-  }
+  var expected1 = '[0000] 24ms         12B 200 /home (generated)'
+  var opts1 = { name: 'myApp' }
+  run(t, input1, expected1, 'test all fields', opts1)
 })
+
+function ignored (t, input, msg, opt) {
+  var val = true
+  var stream = garnish(opt)
+  var stdin = through()
+  stdin
+    .pipe(stream)
+    .pipe(through(function (buf) {
+      var len = strip(buf.toString()).trim().length
+      if (len > 0) {
+        val = false
+      }
+    }))
+  stdin.write(JSON.stringify(input))
+  stdin.end()
+  t.ok(val, msg || 'ignored')
+}
+
+function run (t, input, expected, msg, opt) {
+  var stream = garnish(opt)
+  var stdin = through()
+  stdin
+    .pipe(stream)
+    .pipe(through(function (body) {
+      t.deepEqual(strip(body.toString()).trim(), expected, msg)
+    }))
+  stdin.write(JSON.stringify(input))
+  stdin.end()
+}
