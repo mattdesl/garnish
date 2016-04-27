@@ -19,7 +19,6 @@
     "pad-right": "^0.2.2",
     "prettier-bytes": "^1.0.3",
     "pretty-ms": "^2.1.0",
-    "right-now": "^1.0.0",
     "split2": "^0.2.1",
     "stdout-stream": "^1.4.0",
     "url-trim": "^1.0.0"

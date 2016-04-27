@@ -40,44 +40,40 @@ test('should handle non stylables', function (t) {
 
 test('test url and type', function (t) {
   t.plan(2)
-  var input0 = { url: '/home', type: 'static' }
+  var input0 = { level: 'info', url: '/home', type: 'static' }
   run(t, input0, '[0000] /home (static)')
 
-  var input1 = { url: '/home', type: 'static', name: 'app' }
+  var input1 = { level: 'info', url: '/home', type: 'static', name: 'app' }
   run(t, input1, '[0000] /home (static) (app)')
 })
 
 test('test url and type + elapsed', function (t) {
   t.plan(4)
-  var base = { type: 'static', elapsed: 'infinity', name: 'app' }
+  var b = { level: 'info', type: 'static', elapsed: 'infinity', name: 'app' }
 
-  var input1 = xtend(base, { url: '/home' })
+  var input1 = xtend(b, { url: '/home' })
   var expected1 = '[0000] infinity /home (static) (app)'
   run(t, input1, expected1)
 
-  var input2 = xtend(base, { url: '/home?blah=24#foo' })
+  var input2 = xtend(b, { url: '/home?blah=24#foo' })
   var expected2 = '[0000] infinity /home (static) (app)'
   run(t, input2, expected2, 'strips hash and query')
 
-  var input3 = xtend(base, { url: 'http://localhost:9966/home?blah=24#foo' })
+  var input3 = xtend(b, { url: 'http://localhost:9966/home?blah=24#foo' })
   var expected3 = '[0000] infinity http://localhost:9966/home (static) (app)'
   run(t, input3, expected3, 'does not strip host or port')
 
-  var input4 = xtend(base, { url: 'http://localhost:9966/' })
+  var input4 = xtend(b, { url: 'http://localhost:9966/' })
   var expected4 = '[0000] infinity http://localhost:9966/ (static) (app)'
   run(t, input4, expected4, 'does not strip host or port')
 })
 
-test('levels appear on msg and default name is hidden', function (t) {
-  t.plan(2)
-
-  var input0 = { name: 'myApp', message: 'hello world', level: 'info' }
-  var expected0 = '[0000] info  hello world'
-  var opts0 = { name: 'myApp' }
-  run(t, input0, expected0, 'test level + message', opts0)
+test('test all fields', function (t) {
+  t.plan(1)
 
   // test everything
   var input1 = {
+    level: 'info',
     name: 'myApp',
     url: '/home',
     type: 'generated',
@@ -85,9 +81,8 @@ test('levels appear on msg and default name is hidden', function (t) {
     contentLength: '12b',
     elapsed: '24ms'
   }
-  var expected1 = '[0000] 24ms         12B 200 /home (generated)'
-  var opts1 = { name: 'myApp' }
-  run(t, input1, expected1, 'test all fields', opts1)
+  var expected1 = '[0000] 24ms         12B 200 /home (generated) (myApp)'
+  run(t, input1, expected1, 'test all fields')
 })
 
 function ignored (t, input, msg, opt) {
