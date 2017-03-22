@@ -2,7 +2,7 @@
 
 [![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
 
-Prettifies [ndjson](http://ndjson.org/) or [bole](https://github.com/rvagg/bole) logs from [budo](https://github.com/mattdesl/budo), [wzrd](https://github.com/maxogden/wzrd/) and other tools. 
+Prettifies [ndjson](http://ndjson.org/) or [bole](https://github.com/rvagg/bole) logs from [budo](https://github.com/mattdesl/budo), [wzrd](https://github.com/maxogden/wzrd/) and other tools.
 
 Example with [budo](https://github.com/mattdesl/budo), which uses this under the hood.
 
@@ -42,6 +42,8 @@ Returns a duplexer that parses input as ndjson, and writes a pretty-printed resu
   - the order is as follows: `debug`, `info`, `warn`, `error`
 - `name` (String)
   - the default name for your logger; a message's `name` field will not be printed when it matches this default name, to reduce redundant/obvious information in the logs.
+- `showData` (Boolean)
+  - should fields that are not specifically handled be printed at the end of the line. Defaults to `false`.
 
 ## format
 

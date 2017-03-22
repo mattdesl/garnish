@@ -63,6 +63,29 @@ test('should handle streams', function (t) {
     contentLength: '12b',
     elapsed: '24ms'
   }, '[0000] 24ms         12B 200 /home (generated)', 'test all fields', { name: 'myApp' })
+
+  // test display data
+  run({
+    name: 'myApp',
+    url: '/home',
+    type: 'generated',
+    statusCode: '200',
+    contentLength: '12b',
+    elapsed: '24ms',
+    data: 'foobar'
+  }, '[0000] 24ms         12B 200 /home (generated)   "data": "foobar"', 'test all fields with shown data', { name: 'myApp', showData: true })
+
+  // dont show by default
+  run({
+    name: 'myApp',
+    url: '/home',
+    type: 'generated',
+    statusCode: '200',
+    contentLength: '12b',
+    elapsed: '24ms',
+    data: 'foobar'
+  }, '[0000] 24ms         12B 200 /home (generated)', 'test all fields with hidden data', { name: 'myApp' })
+
   t.end()
 
   function ignored (input, msg, opt) {
